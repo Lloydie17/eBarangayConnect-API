@@ -9,9 +9,28 @@ const Role = require('_helpers/role');
 router.post('/', createSchema, create);
 router.put('/:id', updateSchema, update);
 router.delete('/:id', _delete);
+router.get('/', getAll);
+router.get('/:id', getById);
 //router.post('/generateCertificate', generateCertificate);
 
 module.exports = router;
+
+function getAll(req, res, next) {
+    residentService.getAll()
+        .then(residents => res.json(residents))
+        .catch(next);
+}
+
+function getById(req, res, next) {
+    // admins or user can get any residents
+    if (req.user.role !== Role.Admin && req.user.role !== Role.Staff) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    residentService.getById(req.params.id)
+        .then(resident => resident ? res.json(resident) : res.sendStatus(404))
+        .catch(next);
+}
 
 function createSchema(req, res, next) {
     const schema = Joi.object({
