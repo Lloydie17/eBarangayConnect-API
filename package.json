@@ -1,7 +1,6 @@
 {
-  "name": "node-mysql-signup-verification-api",
+  "name": "eBarangayConnectDB",
   "version": "1.0.0",
-  "description": "NodeJS + MySQL API for Email Sign Up with Verification, Authentication & Forgot Password",
   "license": "MIT",
   "scripts": {
       "start": "node ./server.js",

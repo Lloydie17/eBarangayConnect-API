@@ -4,7 +4,7 @@
         "port" : 3306,
         "user" : "root",
         "password" : "",
-        "database" : "node-mysql-signup-verification-api"
+        "database" : "eBarangayConnectDB"
     },
     "secret": "RSmpo2AB20u0qYdfX1En5w==",
     "emailFrom": "info@node-mysql-signup-verification-api.com",

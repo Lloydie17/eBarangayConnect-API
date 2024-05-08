@@ -18,10 +18,15 @@ async function initialize() {
     // init models and add them to the exported db object
     db.Account = require('../accounts/account.model')(sequelize);
     db.RefreshToken = require('../accounts/refresh-token.model')(sequelize);
+    db.Resident = require('../residents/resident.model')(sequelize);
+    db.ResidentRecord = require('../residents/residentRecord.model')(sequelize);
 
     // define relationships
     db.Account.hasMany(db.RefreshToken, { onDelete: 'CASCADE' });
     db.RefreshToken.belongsTo(db.Account);
+
+    db.Resident.hasMany(db.ResidentRecord, { foreignKey: 'residentId', onDelete: 'CASCADE' });
+    db.ResidentRecord.belongsTo(db.Resident);
     
     // sync all models with database
     await sequelize.sync();
