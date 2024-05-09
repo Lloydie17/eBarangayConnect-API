@@ -3,7 +3,6 @@ const router = express.Router();
 const Joi = require('joi');
 const validateRequest = require('_middleware/validate-request');
 const residentService = require('./resident.service');
-const Role = require('_helpers/role');
 
 // routes
 router.post('/', createSchema, create);
@@ -11,7 +10,7 @@ router.put('/:id', updateSchema, update);
 router.delete('/:id', _delete);
 router.get('/', getAll);
 router.get('/:id', getById);
-//router.post('/generateCertificate', generateCertificate);
+router.post('/generateCertificate', generateCertificate);
 
 module.exports = router;
 
@@ -22,11 +21,6 @@ function getAll(req, res, next) {
 }
 
 function getById(req, res, next) {
-    // admins or user can get any residents
-    if (req.user.role !== Role.Admin && req.user.role !== Role.Staff) {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
-
     residentService.getById(req.params.id)
         .then(resident => resident ? res.json(resident) : res.sendStatus(404))
         .catch(next);
@@ -54,7 +48,7 @@ function create(req, res, next) {
 }
 
 function updateSchema(req, res, next) {
-    const schema = {
+    const schema = Joi.object({
         title: Joi.string().empty(''),
         firstName: Joi.string().empty(''),
         lastName: Joi.string().empty(''),
@@ -64,34 +58,23 @@ function updateSchema(req, res, next) {
         contactNumber: Joi.string().empty(''),
         latitude: Joi.string().empty(''),
         longitude: Joi.string().empty('')
-    };
+    });
 
     validateRequest(req, next, schema);
 }
 
 function update(req, res, next) {
-    // admins or staff can update any residents
-    if (req.user.role !== Role.Admin && req.user.role !== Role.Staff) {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
-
     residentService.updateResidents(req.params.id, req.body)
         .then(resident => res.json(resident))
         .catch(next);
 }
 
 function _delete(req, res, next) {
-    // admins can delete any account
-    if (req.user.role !== Role.Admin) {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
-
     residentService.delete(req.params.id)
         .then(() => res.json({ message: 'Resident deleted successfully' }))
         .catch(next);
 }
 
-/*
 function generateCertificate(req, res, next) {
     residentService.generateCertificate(req.body)
         .then(() => {
@@ -99,4 +82,4 @@ function generateCertificate(req, res, next) {
             res.sendFile('C:/Users/pc/Desktop/test/certificate.pdf');
         })
         .catch(next);
-}*/
+}

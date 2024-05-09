@@ -9,6 +9,9 @@ module.exports = {
     updateResidents,
     getAll,
     getById,
+    getByIdWithRecords,
+    getAllWithRecords,
+    
     delete: _delete
     //generateCertificate
 }
@@ -18,8 +21,43 @@ function basicDetails(resident) {
     return { id, title, firstName, lastName, fullName, birthDate, age, occupation, address, contactNumber, latitude, longitude, updated};
 }
 
-async function createResidents(params) {
+async function getAllWithRecords() {
+    const residents = await db.Resident.findAll({ include: db.ResidentRecord });
+    return residents.map(x => formatResidentWithRecords(x));
+}
 
+async function getByIdWithRecords(id) {
+    const resident = await getResident(id);
+    return formatResidentWithRecords(resident);
+}
+
+function formatResidentWithRecords(resident) {
+    const basicDetails = { 
+        id: resident.id, 
+        title: resident.title, 
+        firstName: resident.firstName, 
+        lastName: resident.lastName, 
+        fullName: resident.fullName, 
+        birthDate: resident.birthDate, 
+        age: resident.age, 
+        occupation: resident.occupation, 
+        address: resident.address, 
+        contactNumber: resident.contactNumber, 
+        latitude: resident.latitude, 
+        longitude: resident.longitude, 
+        updated: resident.updated 
+    };
+    const records = resident.ResidentRecords.map(residentRecord => ({
+        id: residentRecord.id,
+        residentId: residentRecord.residentId,
+        certificatePurpose: residentRecord.certificatePurpose,
+        createdAt: residentRecord.createdAt,
+        updatedAt: residentRecord.updatedAt
+    }));
+    return { ...basicDetails, records };
+}
+
+async function createResidents(params) {
     const resident = new db.Resident(params);
 
     // save resident
@@ -54,7 +92,6 @@ async function _delete(id) {
     await resident.destroy();
 }
 
-/*
 async function generateCertificate(certificateData) {
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -88,10 +125,10 @@ async function generateCertificate(certificateData) {
             <h2>Barangay Certification</h2>
             <p>To Whom It May Concern:</p>
 
-            <p>This is to certify that ${certificateData.name}, legal age,
-            ${certificateData.maritalStatus}, is a bona fide resident at ${certificateData.address},
-            Barangay ${certificateData.barangay}, ${certificateData.city}, who is known in the community
-            and ${certificateData.voter ? 'is a Registered voter.' : 'is not a Registered voter.'}</p>
+            <p>This is to certify that ${resident.fullName}, legal age,
+            married/single, is a bona fide resident at ${resident.address},
+            Barangay Ermita, Cebu City who is known in the community
+            and is a Registered Voter</p>
 
             <p>FURTHER, THIS IS ALSO TO CERTIFY that he/she
             has No Derogatory Records, as per Barangay Log Book of
@@ -99,13 +136,13 @@ async function generateCertificate(certificateData) {
             This issued to attest the veracity of the foregoing
             Certification is for Employment Purpose/s.</p>
 
-            <p>Issued on this day ${formattedDate} at Barangay
-            Hall, Kawit St., Barangay ${certificateData.barangay}, ${certificateData.city}, Philippines.</p>
+            <p>Issued on this day ${Date.now()} at Barangay
+            Hall, Kawit St., Barangay Ermita Cebu City, Philippines.</p>
 
             <p>HON. MARK RIZALDY V. MIRAL</p>
             <p>Ermita Barangay Captain</p>
 
-            <p>${certificateData.name}<br>
+            <p>${resident.fullName}<br>
             Requestor's Specimen Signature</p>
         </div>
     `;
@@ -122,7 +159,7 @@ async function generateCertificate(certificateData) {
             }
         });
     });
-}*/
+}
 
 // helper functions
 
