@@ -25,6 +25,7 @@ function getById(req, res, next) {
 
 function createSchema(req, res, next) {
     const schema = Joi.object({
+        residentId: Joi.string().required(),
         purpose: Joi.string().required(),
     });
     validateRequest(req, next, schema);
