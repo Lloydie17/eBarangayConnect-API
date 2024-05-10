@@ -10,9 +10,16 @@ router.put('/:id', updateSchema, update);
 router.delete('/:id', _delete);
 router.get('/', getAll);
 router.get('/:id', getById);
+router.get('/location/:firstName', getResidentLocationByName);
 //router.post('/generateCertificate', generateCertificate);
 
 module.exports = router;
+
+function getResidentLocationByName(req, res, next) {
+    residentService.getResidentLocation(req.params.firstName)
+        .then(location => res.json(location))
+        .catch(next);
+}
 
 function getAll(req, res, next) {
     residentService.getAll()

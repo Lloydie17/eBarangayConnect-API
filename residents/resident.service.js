@@ -9,7 +9,8 @@ module.exports = {
     updateResidents,
     getAll,
     getById,
-    delete: _delete
+    delete: _delete,
+    getResidentLocation
 }
 
 function basicDetails(resident) {
@@ -50,6 +51,12 @@ async function getById(id) {
 async function _delete(id) {
     const resident = await getResident(id);
     await resident.destroy();
+}
+
+async function getResidentLocation(firstName) {
+    const resident = await db.Resident.findOne({ where: { firstName: firstName } });
+    if (!resident) throw 'Resident not found';
+    return { latitude: resident.latitude, longitude: resident.longitude };
 }
 
 /*
