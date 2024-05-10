@@ -9,52 +9,12 @@ module.exports = {
     updateResidents,
     getAll,
     getById,
-    getByIdWithRecords,
-    getAllWithRecords,
-    
     delete: _delete
-    //generateCertificate
 }
 
 function basicDetails(resident) {
     const { id, title, firstName, lastName, fullName, birthDate, age, occupation, address, contactNumber, latitude, longitude, updated } = resident;
     return { id, title, firstName, lastName, fullName, birthDate, age, occupation, address, contactNumber, latitude, longitude, updated};
-}
-
-async function getAllWithRecords() {
-    const residents = await db.Resident.findAll({ include: db.ResidentRecord });
-    return residents.map(x => formatResidentWithRecords(x));
-}
-
-async function getByIdWithRecords(id) {
-    const resident = await getResident(id);
-    return formatResidentWithRecords(resident);
-}
-
-function formatResidentWithRecords(resident) {
-    const basicDetails = { 
-        id: resident.id, 
-        title: resident.title, 
-        firstName: resident.firstName, 
-        lastName: resident.lastName, 
-        fullName: resident.fullName, 
-        birthDate: resident.birthDate, 
-        age: resident.age, 
-        occupation: resident.occupation, 
-        address: resident.address, 
-        contactNumber: resident.contactNumber, 
-        latitude: resident.latitude, 
-        longitude: resident.longitude, 
-        updated: resident.updated 
-    };
-    const records = resident.ResidentRecords.map(residentRecord => ({
-        id: residentRecord.id,
-        residentId: residentRecord.residentId,
-        certificatePurpose: residentRecord.certificatePurpose,
-        createdAt: residentRecord.createdAt,
-        updatedAt: residentRecord.updatedAt
-    }));
-    return { ...basicDetails, records };
 }
 
 async function createResidents(params) {
@@ -92,6 +52,7 @@ async function _delete(id) {
     await resident.destroy();
 }
 
+/*
 async function generateCertificate(certificateData) {
     const months = [
         'January', 'February', 'March', 'April', 'May', 'June', 'July',
@@ -159,7 +120,7 @@ async function generateCertificate(certificateData) {
             }
         });
     });
-}
+}*/
 
 // helper functions
 

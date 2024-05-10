@@ -10,7 +10,7 @@ router.put('/:id', updateSchema, update);
 router.delete('/:id', _delete);
 router.get('/', getAll);
 router.get('/:id', getById);
-router.post('/generateCertificate', generateCertificate);
+//router.post('/generateCertificate', generateCertificate);
 
 module.exports = router;
 
@@ -75,6 +75,8 @@ function _delete(req, res, next) {
         .catch(next);
 }
 
+/*
+
 function generateCertificate(req, res, next) {
     residentService.generateCertificate(req.body)
         .then(() => {
@@ -82,4 +84,4 @@ function generateCertificate(req, res, next) {
             res.sendFile('C:/Users/pc/Desktop/test/certificate.pdf');
         })
         .catch(next);
-}
+}*/
