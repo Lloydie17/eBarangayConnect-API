@@ -1,8 +1,6 @@
 const config = require('config.json');
 const { Op } = require('sequelize');
 const db = require('_helpers/db');
-//const pdf = require('html-pdf');
-//const fs = require('fs');
 
 module.exports = {
     createResidents,
@@ -10,7 +8,7 @@ module.exports = {
     getAll,
     getById,
     delete: _delete,
-    getResidentLocation
+    getResidentLocation,
 }
 
 function basicDetails(resident) {
@@ -58,76 +56,6 @@ async function getResidentLocation(firstName) {
     if (!resident) throw 'Resident not found';
     return { latitude: resident.latitude, longitude: resident.longitude };
 }
-
-/*
-async function generateCertificate(certificateData) {
-    const months = [
-        'January', 'February', 'March', 'April', 'May', 'June', 'July',
-        'August', 'September', 'October', 'November', 'December'
-    ];
-
-    const currentDate = new Date();
-    const formattedDate = `${months[currentDate.getMonth()]} ${currentDate.getDate()}, ${currentDate.getFullYear()}`;
-
-    // Generate HTML for the certificate
-    const certificateHTML = `
-        <div style="text-align: center;>
-            <table style="margin: 0 auto;">
-                <tr>
-                    <td>
-                        <img src="/Images/ErmitaLogo.png" alt="Barangay Seal" style="width:100px;height:100px;">
-                    </td>
-                    <td style="text-align: left;">
-                        <h2>Republic of the Philippines</h2>
-                        <h3>City of Cebu</h3>
-                        <h3>Barangay Ermita</h3>
-                        <p>Office of Barangay Captain</p>
-                        <p>Barangay Hall, Kawit St.</p>
-                        <p>Telephone No. 417-4636</p>
-                    </td>
-                    <td>
-                        <img src="/Images/CityLogo.png" alt="Cebu City Seal" style="width:100px;height:100px;">
-                    </td>
-                </tr>
-            </table>
-            <h2>Barangay Certification</h2>
-            <p>To Whom It May Concern:</p>
-
-            <p>This is to certify that ${resident.fullName}, legal age,
-            married/single, is a bona fide resident at ${resident.address},
-            Barangay Ermita, Cebu City who is known in the community
-            and is a Registered Voter</p>
-
-            <p>FURTHER, THIS IS ALSO TO CERTIFY that he/she
-            has No Derogatory Records, as per Barangay Log Book of
-            records, a person with Good Moral Character and Probity.
-            This issued to attest the veracity of the foregoing
-            Certification is for Employment Purpose/s.</p>
-
-            <p>Issued on this day ${Date.now()} at Barangay
-            Hall, Kawit St., Barangay Ermita Cebu City, Philippines.</p>
-
-            <p>HON. MARK RIZALDY V. MIRAL</p>
-            <p>Ermita Barangay Captain</p>
-
-            <p>${resident.fullName}<br>
-            Requestor's Specimen Signature</p>
-        </div>
-    `;
-
-    // Generate PDF from HTML
-    return new Promise((resolve, reject) => {
-        pdf.create(certificateHTML).toFile('C:/Users/pc/Desktop/test/certificate.pdf', function(err, res) {
-            if (err) {
-                console.log(err);
-                reject('Error generating certificate');
-            } else {
-                console.log('Certificate generated successfully');
-                resolve(res);
-            }
-        });
-    });
-}*/
 
 // helper functions
 

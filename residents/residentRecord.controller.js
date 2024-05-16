@@ -8,8 +8,19 @@ const residentRecordService = require('./residentRecord.service');
 router.post('/', createSchema, create);
 router.get('/', getAll);
 router.get('/:id', getById);
+router.post('/generate', generateCertificate);
+router.get('/resident/:residentId', getAllByResidentId);
 
 module.exports = router;
+
+function getAllByResidentId(req, res, next) {
+    const { residentId } = req.params;
+
+    // Fetch records by residentId
+    residentRecordService.getAllByResidentId(residentId)
+        .then(records => res.json(records))
+        .catch(next);
+}
 
 function getAll(req, res, next) {
     residentRecordService.getAll()
@@ -26,7 +37,7 @@ function getById(req, res, next) {
 function createSchema(req, res, next) {
     const schema = Joi.object({
         residentId: Joi.string().required(),
-        purpose: Joi.string().required(),
+        certificatePurpose: Joi.string().required(),
     });
     validateRequest(req, next, schema);
 }
@@ -37,13 +48,12 @@ function create(req, res, next) {
         .catch(next);
 }
 
-/*
-
 function generateCertificate(req, res, next) {
-    residentService.generateCertificate(req.body)
-        .then(() => {
-            // Send the PDF file as a response
-            res.sendFile('C:/Users/pc/Desktop/test/certificate.pdf');
+    const { residentId, certificatePurpose } = req.body;
+    residentRecordService.generateCertificate(residentId, certificatePurpose)
+        .then((pdfFilePath) => {
+            // Send the PDF file path as a response
+            res.json({ pdfFilePath });
         })
         .catch(next);
-}*/
+}

@@ -83,7 +83,6 @@ function _delete(req, res, next) {
 }
 
 /*
-
 function generateCertificate(req, res, next) {
     residentService.generateCertificate(req.body)
         .then(() => {
