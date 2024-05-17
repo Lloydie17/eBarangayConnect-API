@@ -9,10 +9,17 @@ router.post('/', createSchema, create);
 router.get('/', getAll);
 router.get('/:id', getById);
 router.post('/generate', generateCertificate);
-router.get('/resident/:residentId', getAllByResidentId);
+router.get('/resident/:residentId', getByResidentId);
 
 module.exports = router;
 
+function getByResidentId(req, res, next) {
+    residentRecordService.getAllByResidentId(req.params.residentId)
+        .then(residentRecords => res.json(residentRecords))
+        .catch(next);
+}
+
+/*
 function getAllByResidentId(req, res, next) {
     const { residentId } = req.params;
 
@@ -20,7 +27,7 @@ function getAllByResidentId(req, res, next) {
     residentRecordService.getAllByResidentId(residentId)
         .then(records => res.json(records))
         .catch(next);
-}
+}*/
 
 function getAll(req, res, next) {
     residentRecordService.getAll()
@@ -50,10 +57,11 @@ function create(req, res, next) {
 
 function generateCertificate(req, res, next) {
     const { residentId, certificatePurpose } = req.body;
+    
     residentRecordService.generateCertificate(residentId, certificatePurpose)
         .then((pdfFilePath) => {
-            // Send the PDF file path as a response
             res.json({ pdfFilePath });
         })
         .catch(next);
 }
+
