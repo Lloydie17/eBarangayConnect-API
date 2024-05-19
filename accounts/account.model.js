@@ -19,6 +19,7 @@ function model(sequelize) {
         passwordReset: { type: DataTypes.DATE },
         created: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
         updated: { type: DataTypes.DATE },
+        profilePicture: { type: DataTypes.STRING, allowNull: true, defaultValue: 'uploads/default-profile.png' },
         isVerified: {
             type: DataTypes.VIRTUAL,
             get() { return !!(this.verified || this.passwordReset); }

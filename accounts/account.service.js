@@ -5,6 +5,8 @@ const crypto = require("crypto");
 const { Op } = require('sequelize');
 const sendEmail = require('_helpers/send-email');
 const db = require('_helpers/db');
+const fs = require('fs').promises;
+const path = require('path');
 const Role = require('_helpers/role');
 
 module.exports = {
@@ -23,6 +25,7 @@ module.exports = {
     deactivate
     //delete: _delete
 };
+
 
 async function authenticate({ email, password, ipAddress }) {
     const account = await db.Account.scope('withHash').findOne({ where: { email } });
@@ -183,32 +186,60 @@ async function create(params) {
     return basicDetails(account);
 }
 
-async function update(id, params) {
-    const account = await getAccount(id);
+async function updateProfile(id, profilePicture) {
+    try {
+        console.log('Profile data:', profilePicture); // Log imageData for debugging
 
-    // validate (if email was changed)
-    if (params.email && account.email !== params.email && await db.Account.findOne({ where: { email: params.email } })) {
-        throw 'Email "' + params.email + '" is already taken';
+        // Validate image file extension
+        const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+        const extension = path.extname(profilePicture.originalname);
+        if (!allowedExtensions.includes(extension)) {
+            throw 'Only JPG, JPEG, PNG, and GIF files are allowed';
+        }
+
+        // Define file path
+        const relativeImagePath = path.join('uploads', profilePicture.filename);
+
+        console.log('Image path:', relativeImagePath);
+
+        return relativeImagePath;
+    } catch (error) {
+        console.error('Error saving image:', error);
+        throw error;
     }
-
-    // hash password if it was entered
-    if (params.password) {
-        params.passwordHash = await hash(params.password);
-    }
-
-    // copy params to account and save
-    Object.assign(account, params);
-    account.updated = Date.now();
-    await account.save();
-
-    return basicDetails(account);
 }
 
-/*
-async function _delete(id) {
-    const account = await getAccount(id);
-    await account.destroy();
-}*/
+async function update(id, params) {
+    const { profilePicture, ...basicDetails } = params;
+
+    try {
+        const account = await getAccount(id);
+
+        // validate (if email was changed)
+        if (params.email && account.email !== params.email && await db.Account.findOne({ where: { email: params.email } })) {
+            throw 'Email "' + params.email + '" is already taken';
+        }
+
+        // hash password if it was entered
+        if (params.password) {
+            params.passwordHash = await hash(params.password);
+        }
+
+        if (profilePicture) {
+            const imagePath = await updateProfile(account.id, profilePicture);
+            params.profilePicture = imagePath;
+        }
+
+        // copy params to account and save
+        Object.assign(account, params);
+        account.updated = Date.now();
+        await account.save();
+
+        return basicDetails(account);
+    } catch (error) {
+        throw error;
+    }
+}
 
 async function deactivate(id) {
     const account = await getAccount(id);
@@ -255,8 +286,8 @@ function randomTokenString() {
 }
 
 function basicDetails(account) {
-    const { id, title, firstName, lastName, email, role, created, updated, isVerified, isActive } = account;
-    return { id, title, firstName, lastName, email, role, created, updated, isVerified, isActive };
+    const { id, title, firstName, lastName, email, role, created, updated, isVerified, isActive, profilePicture } = account;
+    return { id, title, firstName, lastName, email, role, created, updated, isVerified, isActive, profilePicture };
 }
 
 async function sendVerificationEmail(account, origin) {

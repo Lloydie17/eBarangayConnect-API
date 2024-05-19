@@ -11,7 +11,6 @@ router.delete('/:id', _delete);
 router.get('/', getAll);
 router.get('/:id', getById);
 router.get('/location/:firstName', getResidentLocationByName);
-//router.post('/generateCertificate', generateCertificate);
 
 module.exports = router;
 
@@ -81,13 +80,3 @@ function _delete(req, res, next) {
         .then(() => res.json({ message: 'Resident deleted successfully' }))
         .catch(next);
 }
-
-/*
-function generateCertificate(req, res, next) {
-    residentService.generateCertificate(req.body)
-        .then(() => {
-            // Send the PDF file as a response
-            res.sendFile('C:/Users/pc/Desktop/test/certificate.pdf');
-        })
-        .catch(next);
-}*/
