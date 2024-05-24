@@ -210,8 +210,6 @@ async function updateProfile(id, profilePicture) {
 }
 
 async function update(id, params) {
-    const { profilePicture, ...basicDetails } = params;
-
     try {
         const account = await getAccount(id);
 
@@ -225,8 +223,8 @@ async function update(id, params) {
             params.passwordHash = await hash(params.password);
         }
 
-        if (profilePicture) {
-            const imagePath = await updateProfile(account.id, profilePicture);
+        if (params.profilePicture) {
+            const imagePath = await updateProfile(account.id, params.profilePicture);
             params.profilePicture = imagePath;
         }
 
