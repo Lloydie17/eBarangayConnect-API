@@ -61,7 +61,7 @@ async function generateCertificate(residentId, certificatePurpose) {
                 <table style="margin: 0 auto;">
                     <tr>
                         <td>
-                            <img src="C:/Users/pc/Desktop/eBarangayConnect-API/Images/ErmitaLogo.png" alt="Barangay Seal" style="width:100px;height:100px;">
+                            <img src="C:/Users/yy122/Desktop/eBarangayConnect-API/Images/ErmitaLogo.png" alt="Barangay Seal" style="width:100px;height:100px;">
                         </td>
                         <td style="text-align: center;">
                             <h2>Republic of the Philippines</h2>
@@ -72,7 +72,7 @@ async function generateCertificate(residentId, certificatePurpose) {
                             <p>Telephone No. 417-4636</p>
                         </td>
                         <td>
-                            <img src="C:/Users/pc/Desktop/eBarangayConnect-API/Images/CityLogo.png" alt="Cebu City Seal" style="width:100px;height:100px;">
+                            <img src="C:/Users/yy122/Desktop/eBarangayConnect-API/Images/CityLogo.png" alt="Cebu City Seal" style="width:100px;height:100px;">
                         </td>
                     </tr>
                 </table>
@@ -101,7 +101,7 @@ async function generateCertificate(residentId, certificatePurpose) {
             </div>
         `;
 
-        pdf.create(certificateHTML).toFile(`C:/Users/pc/Desktop/test/${resident.fullName}_${residentRecord.certificatePurpose}_Certificate.pdf`, function (err, res) {
+        pdf.create(certificateHTML).toFile(`C:/Users/yy122/Desktop/eBarangayConnect-API/certificates/${resident.fullName}_${residentRecord.certificatePurpose}_Certificate.pdf`, function (err, res) {
             if (err) {
                 console.log(err);
                 reject('Error generating certificate');
