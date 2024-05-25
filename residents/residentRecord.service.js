@@ -61,9 +61,9 @@ async function generateCertificate(residentId, certificatePurpose) {
                 <table style="margin: 0 auto;">
                     <tr>
                         <td>
-                            <img src="/Images/ErmitaLogo.png" alt="Barangay Seal" style="width:100px;height:100px;">
+                            <img src="C:/Users/pc/Desktop/eBarangayConnect-API/Images/ErmitaLogo.png" alt="Barangay Seal" style="width:100px;height:100px;">
                         </td>
-                        <td style="text-align: left;">
+                        <td style="text-align: center;">
                             <h2>Republic of the Philippines</h2>
                             <h3>City of Cebu</h3>
                             <h3>Barangay Ermita</h3>
@@ -72,7 +72,7 @@ async function generateCertificate(residentId, certificatePurpose) {
                             <p>Telephone No. 417-4636</p>
                         </td>
                         <td>
-                            <img src="/Images/CityLogo.png" alt="Cebu City Seal" style="width:100px;height:100px;">
+                            <img src="C:/Users/pc/Desktop/eBarangayConnect-API/Images/CityLogo.png" alt="Cebu City Seal" style="width:100px;height:100px;">
                         </td>
                     </tr>
                 </table>

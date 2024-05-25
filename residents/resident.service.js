@@ -54,7 +54,7 @@ async function _delete(id) {
 async function getResidentLocation(firstName) {
     const resident = await db.Resident.findOne({ where: { firstName: firstName } });
     if (!resident) throw 'Resident not found';
-    return { latitude: resident.latitude, longitude: resident.longitude };
+    return { latitude: resident.latitude, longitude: resident.longitude, fullName: resident.fullName };
 }
 
 // helper functions
